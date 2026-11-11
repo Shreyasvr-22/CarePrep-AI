@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f8f7" />
+  <meta name="description" content="CarePrep AI helps people understand general health information and prepare for conversations with healthcare professionals." />
+  <title>CarePrep AI | Prepare for your care conversation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#home" aria-label="CarePrep AI home">
+      <span class="brand-mark"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 7v26M7 20h26"/><circle cx="20" cy="20" r="16"/></svg></span>
+      <span class="brand-name">careprep<span>AI</span></span>
+    </a>
+    <div class="workspace-label">WORKSPACE</div>
+    <nav class="side-nav" aria-label="Main navigation">
+      <button class="nav-item active" data-page="home"><span class="nav-icon">⌂</span> Overview</button>
+      <button class="nav-item" data-page="assistant"><span class="nav-icon">✳</span> Health assistant</button>
+      <button class="nav-item" data-page="questions"><span class="nav-icon">☷</span> Doctor questions</button>
+      <button class="nav-item" data-page="summary"><span class="nav-icon">▤</span> Visit preparation</button>
+      <button class="nav-item" data-page="checklist"><span class="nav-icon">✓</span> Appointment checklist</button>
+      <button class="nav-item" data-page="prescription"><span class="nav-icon">▣</span> Prescription companion</button>
+      <button class="nav-item" data-page="notes"><span class="nav-icon">▧</span> My notes <span class="nav-count" id="notesNavCount">0</span></button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="privacy-card"><span class="privacy-icon">⌑</span><div><strong>Your privacy matters</strong><p>Notes stay in this browser only. Avoid entering identifying details. Local browser storage is not encrypted.</p></div></div>
+      <div class="profile-row"><div class="profile-avatar">CP</div><div><strong>Personal workspace</strong><span>Local browser session</span></div><span class="online-dot"></span></div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="mobile-menu" id="mobileMenu" aria-label="Toggle menu">☰</button>
+      <div class="breadcrumbs"><span>Workspace</span><b>/</b><strong id="breadcrumbCurrent">Overview</strong></div>
+      <div class="topbar-right"><span class="connection-pill" id="connectionPill"><i></i><span>Checking AI...</span></span><span class="topbar-date" id="todayLabel"></span></div>
+    </header>
+
+    <!-- OVERVIEW / ANALYTICS-STYLE DASHBOARD -->
+    <section class="page active" id="page-home">
+      <div class="dashboard-header">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> YOUR PERSONAL CARE WORKSPACE</div>
+          <h1>Good day. Let's get you<br class="desktop-break"/> ready for your care conversation.</h1>
+          <p class="hero-subtitle">A calmer, clearer way to organise questions, notes and the details you want to discuss with a healthcare professional.</p>
+        </div>
+        <div class="dashboard-header-tools">
+          <div class="dashboard-date-chip"><span class="date-chip-icon">◷</span><span id="dashboardDateFull">Tuesday, November 10</span></div>
+          <button class="dashboard-search" type="button" data-go="notes"><span>⌕</span> Find a saved note <kbd>↗</kbd></button>
+        </div>
+      </div>
+
+      <div class="dashboard-layout">
+        <div class="dashboard-primary">
+          <section class="dashboard-hero-card">
+            <div class="dashboard-hero-copy">
+              <span class="hero-overline"><span class="hero-live-dot"></span> CAREPREP AI WORKSPACE</span>
+              <h2>Your next care conversation<br/>starts with good preparation.</h2>
+              <p>Keep your observations organised, prepare thoughtful questions and bring the details you choose to share with your clinician.</p>
+              <div class="dashboard-hero-actions">
+                <button class="hero-primary-button" type="button" data-go="checklist">Continue preparation <span>→</span></button>
+                <button class="hero-quiet-button" type="button" data-go="assistant">Ask the AI assistant</button>
+              </div>
+            </div>
+            <div class="dashboard-hero-art" aria-hidden="true">
+              <div class="hero-art-orbit hero-art-orbit-one"></div>
+              <div class="hero-art-orbit hero-art-orbit-two"></div>
+              <div class="hero-art-cross hero-art-cross-one">＋</div>
+              <div class="hero-art-cross hero-art-cross-two">＋</div>
+              <div class="hero-art-document"><span class="document-symbol">✳</span><i></i><i></i><i></i><b>CARE NOTES</b></div>
+              <div class="hero-art-heart">♡</div>
+            </div>
+          </section>
+
+          <div class="dashboard-metric-grid">
+            <article class="dashboard-metric-card metric-progress-card">
+              <span class="metric-icon metric-icon-green">✓</span>
+              <div><span class="metric-label">Preparation progress</span><strong id="homeChecklistCount">0%</strong><small>Appointment checklist</small></div>
+              <span class="metric-trend">↗</span>
+            </article>
+            <article class="dashboard-metric-card">
+              <span class="metric-icon metric-icon-lilac">▧</span>
+              <div><span class="metric-label">Saved on this device</span><strong id="homeNotesCount">0</strong><small>Personal notes</small></div>
+            </article>
+            <article class="dashboard-metric-card">
+              <span class="metric-icon metric-icon-peach">文</span>
+              <div><span class="metric-label">Available languages</span><strong>03</strong><small>English · Kannada · Hindi</small></div>
+            </article>
+            <article class="dashboard-metric-card dashboard-ai-metric">
+              <span class="metric-icon metric-icon-blue">✳</span>
+              <div><span class="metric-label">AI assistant</span><strong id="dashboardAiLabel">Checking</strong><small>General health information</small></div>
+              <span class="metric-status-dot" id="dashboardAiDot"></span>
+            </article>
+          </div>
+
+          <div class="dashboard-section-heading">
+            <div><span class="section-kicker">YOUR WORKSPACE</span><h2>Preparation overview</h2></div>
+            <span class="dashboard-section-note">Progress from your checklist</span>
+          </div>
+
+          <div class="dashboard-content-grid">
+            <section class="panel preparation-overview-panel">
+              <div class="dashboard-panel-heading">
+                <div><span class="section-kicker">APPOINTMENT READINESS</span><h3>Your preparation at a glance</h3></div>
+                <button class="panel-link-button" type="button" data-go="checklist">Open checklist <span>→</span></button>
+              </div>
+              <div class="preparation-overview-body">
+                <div class="progress-ring" id="dashboardProgressRing" style="--progress-angle:0deg">
+                  <div class="progress-ring-inner"><strong id="dashboardProgressValue">0%</strong><span>completed</span></div>
+                </div>
+                <div class="preparation-breakdown">
+                  <strong id="dashboardProgressSummary">0 of 10 steps completed</strong>
+                  <p>Complete the items that are useful for your appointment. You can skip anything that does not apply.</p>
+                  <div id="dashboardGroupBars" class="dashboard-group-bars"></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel dashboard-quick-panel">
+              <div class="dashboard-panel-heading">
+                <div><span class="section-kicker">QUICK ACTIONS</span><h3>What would you like to do?</h3></div>
+                <span class="quick-panel-mark">✦</span>
+              </div>
+              <button class="dashboard-action-row" type="button" data-go="assistant"><span class="dashboard-action-icon action-icon-mint">✳</span><span><strong>Ask a health question</strong><small>Get a general explanation</small></span><b>→</b></button>
+              <button class="dashboard-action-row" type="button" data-go="questions"><span class="dashboard-action-icon action-icon-lilac">☷</span><span><strong>Prepare doctor questions</strong><small>Make a list to discuss</small></span><b>→</b></button>
+              <button class="dashboard-action-row" type="button" data-go="summary"><span class="dashboard-action-icon action-icon-peach">▤</span><span><strong>Create a visit note</strong><small>Organise your observations</small></span><b>→</b></button>
+              <button class="dashboard-action-row" type="button" data-go="prescription"><span class="dashboard-action-icon action-icon-mint">▣</span><span><strong>Understand a medicine label</strong><small>Explain source-based instructions</small></span><b>→</b></button>
+              <button class="dashboard-action-row" type="button" data-go="notes"><span class="dashboard-action-icon action-icon-blue">▧</span><span><strong>Open my notes</strong><small>Review saved drafts</small></span><b>→</b></button>
+            </section>
+          </div>
+
+          <section class="panel dashboard-recent-panel">
+            <div class="dashboard-panel-heading">
+              <div><span class="section-kicker">ON THIS DEVICE</span><h3>Recently saved notes</h3></div>
+              <button class="panel-link-button" type="button" data-go="notes">View all notes <span>→</span></button>
+            </div>
+            <div id="dashboardRecentNotes" class="dashboard-recent-notes"><div class="dashboard-empty-notes">Your saved notes will appear here.</div></div>
+          </section>
+          <div class="dashboard-safety-note"><span>ⓘ</span><p><strong>Designed to support—not replace—professional care.</strong> CarePrep AI provides general educational information and helps organise what you want to discuss. It does not diagnose, prescribe or assess emergencies.</p></div>
+        </div>
+
+        <aside class="dashboard-rail">
+          <section class="dashboard-rail-dark">
+            <div class="rail-topline"><span>YOUR PERSONAL SPACE</span><span class="rail-status-dot"></span></div>
+            <div class="rail-date-heading"><div><span id="dashboardMonth">NOVEMBER 2026</span><strong id="dashboardDayNumber">10</strong><small id="dashboardDayName">Tuesday</small></div><div class="rail-date-icon">◷</div></div>
+            <div class="rail-calendar-week" id="dashboardCalendarWeek" aria-label="Current week"></div>
+            <div class="rail-divider"></div>
+            <div class="rail-section-heading"><strong>Your next steps</strong><span>Suggested</span></div>
+            <button class="rail-next-step" type="button" data-go="checklist"><span class="rail-step-icon">✓</span><span><strong>Review your checklist</strong><small>See what is still to prepare</small></span><b>›</b></button>
+            <button class="rail-next-step" type="button" data-go="questions"><span class="rail-step-icon">☷</span><span><strong>Prepare questions</strong><small>Choose what to ask your clinician</small></span><b>›</b></button>
+            <button class="rail-next-step" type="button" data-go="notes"><span class="rail-step-icon">▧</span><span><strong>Review your notes</strong><small>Your drafts stay in this browser</small></span><b>›</b></button>
+            <button class="rail-next-step" type="button" data-go="prescription"><span class="rail-step-icon">▣</span><span><strong>Understand a medicine label</strong><small>Review source-based information</small></span><b>›</b></button>
+            <div class="rail-progress-card"><div class="rail-progress-heading"><span>Checklist completion</span><strong id="dashboardRailPercent">0%</strong></div><div class="rail-progress-track"><span id="dashboardRailProgress" style="width:0%"></span></div><small id="dashboardRailSummary">0 of 10 items completed</small></div>
+          </section>
+          <section class="panel dashboard-language-panel">
+            <span class="section-kicker">MADE TO BE UNDERSTOOD</span>
+            <h3>Choose your language</h3>
+            <p>Use the assistant in the language that feels most comfortable.</p>
+            <div class="dashboard-language-chips"><span>English</span><span>ಕನ್ನಡ</span><span>हिन्दी</span></div>
+            <button class="panel-link-button" type="button" data-go="assistant">Open health assistant <span>→</span></button>
+          </section>
+          <div class="dashboard-privacy-rail"><span>⌑</span><p><strong>Your privacy matters.</strong> Notes and checklist progress are stored in this browser only. Local storage is not encrypted; avoid sensitive or identifying details.</p></div>
+        </aside>
+      </div>
+      <footer class="page-footer">CarePrep AI 2.2 <span>•</span> A learning project for health information and visit preparation</footer>
+    </section>
+
+    <!-- MULTILINGUAL HEALTH ASSISTANT -->
+    <section class="page" id="page-assistant">
+      <div class="page-title-row"><div><div class="eyebrow"><span class="eyebrow-line"></span> GENERAL HEALTH INFORMATION</div><h1>Health assistant</h1><p class="hero-subtitle">Ask general health questions in English, Kannada or Hindi.</p></div><div class="assistant-badge"><span>✳</span> AI-powered guide</div></div>
+      <div class="assistant-layout">
+        <div class="chat-panel panel">
+          <div class="chat-header"><div class="chat-avatar">✳</div><div><strong>CarePrep AI</strong><span><i></i> Here to help you prepare</span></div><button class="clear-chat" id="clearChat">Clear chat</button></div>
+          <div class="assistant-controls">
+            <label>Response language<select id="chatLanguage"><option value="en">English</option><option value="kn">ಕನ್ನಡ · Kannada</option><option value="hi">हिन्दी · Hindi</option></select></label>
+            <label>Explanation style<select id="answerStyle"><option value="simple">Simple explanation</option><option value="detailed">More detailed</option></select></label>
+          </div>
+          <div class="chat-messages" id="chatMessages" aria-live="polite"><div class="message assistant-message"><div class="message-avatar">✳</div><div class="message-content"><span class="message-author">CAREPREP AI <small>NOW</small></span><div class="message-bubble">Hello! I can explain general health topics and help you prepare questions for a healthcare professional. Select your preferred language and ask a question.</div></div></div></div>
+          <div class="chat-compose"><div class="compose-wrap"><textarea id="chatInput" rows="1" maxlength="2500" placeholder="Ask a general health question..."></textarea><button class="send-button" id="sendChat" aria-label="Send message"><span>↑</span></button></div><div class="compose-meta"><span>Enter to send · Shift + Enter for a new line</span><span id="charCount">0 / 2500</span></div></div>
+        </div>
+        <aside class="assistant-aside"><div class="panel prompt-panel"><span class="section-kicker">SUGGESTED TOPICS</span><h3>Explore a topic</h3><button class="topic-button" data-prompt="Can you explain what blood pressure numbers generally mean?"><span>♥</span><label>Understanding blood pressure</label><b>→</b></button><button class="topic-button" data-prompt="What are some general habits that support good sleep?"><span>☾</span><label>Healthy sleep habits</label><b>→</b></button><button class="topic-button" data-prompt="What information should I note when keeping a personal symptom diary for my doctor?"><span>▤</span><label>Keeping a symptom diary</label><b>→</b></button><button class="topic-button" data-prompt="What are useful questions to ask a doctor about a newly prescribed medicine?"><span>＋</span><label>Questions about medicines</label><b>→</b></button></div><div class="safety-card"><div class="safety-icon">!</div><strong>Need urgent help?</strong><p>Do not use this assistant for emergencies. If someone may be in immediate danger or has severe symptoms, contact local emergency services or go to the nearest emergency department.</p></div><div class="mini-privacy"><span>⌑</span><p>When live AI is on, chat text is sent to Groq. Do not share identifying or highly sensitive information.</p></div></aside>
+      </div>
+      <footer class="page-footer">AI responses can be incomplete or inaccurate. Confirm personal medical questions with a qualified healthcare professional.</footer>
+    </section>
+
+    <!-- DOCTOR QUESTION GENERATOR -->
+    <section class="page" id="page-questions">
+      <div class="page-title-row"><div><div class="eyebrow"><span class="eyebrow-line"></span> APPOINTMENT QUESTION PLANNER</div><h1>Doctor question generator</h1><p class="hero-subtitle">Turn a topic you want to discuss into neutral questions for your appointment.</p></div><div class="assistant-badge"><span>☷</span> AI-assisted</div></div>
+      <div class="feature-layout">
+        <form class="panel feature-form" id="questionsForm">
+          <div class="form-heading"><div><span class="section-kicker">YOUR TOPIC</span><h2>What would you like to ask about?</h2><p>Share only the details you are comfortable including. Do not enter identifying information.</p></div></div>
+          <label class="field-label" for="questionConcern">Topic or concern <span class="required">*</span></label>
+          <textarea class="form-textarea" id="questionConcern" rows="4" maxlength="1800" required placeholder="e.g. I want to understand the results of a routine check-up..."></textarea>
+          <label class="field-label" for="questionContext">Additional context <span class="optional">OPTIONAL</span></label>
+          <textarea class="form-textarea compact" id="questionContext" rows="3" maxlength="800" placeholder="Add non-identifying context you want the questions to reflect..."></textarea>
+          <label class="field-label" for="questionLanguage">Output language</label>
+          <select class="form-input" id="questionLanguage"><option value="en">English</option><option value="kn">Kannada</option><option value="hi">Hindi</option></select>
+          <div class="form-privacy"><span>⌑</span><p>The AI suggests questions only. It does not interpret symptoms or recommend diagnosis or treatment.</p></div>
+          <button class="primary-button" type="submit" id="generateQuestions">Generate doctor questions <span>→</span></button>
+        </form>
+        <div class="panel output-panel feature-output"><div class="output-top"><div><span class="section-kicker">QUESTION LIST</span><h2>Questions to discuss</h2></div><span class="draft-tag">DRAFT</span></div>
+          <div class="output-placeholder" id="questionsPlaceholder"><div class="placeholder-illustration"><span>☷</span><i>✦</i></div><h3>Your questions will appear here</h3><p>Describe the topic you want to discuss and select “Generate doctor questions”. Review the list and choose what is relevant to you.</p></div>
+          <div class="summary-result hidden" id="questionsResult"><div id="questionsOutput" class="markdown-body summary-markdown"></div><div class="output-actions"><button class="secondary-button" id="copyQuestions" type="button">▣ Copy</button><button class="secondary-button" id="saveQuestions" type="button">＋ Save to my notes</button></div></div>
+          <div class="output-footer"><span>✦</span> Suggested questions are conversation starters, not medical advice.</div>
+        </div>
+      </div>
+      <footer class="page-footer">Generated questions are optional. A qualified clinician can help decide what is relevant to your situation.</footer>
+    </section>
+
+    <!-- VISIT PREPARATION -->
+    <section class="page" id="page-summary">
+      <div class="page-title-row"><div><div class="eyebrow"><span class="eyebrow-line"></span> APPOINTMENT PREPARATION</div><h1>Prepare for your visit</h1><p class="hero-subtitle">Organise your own observations into a draft to review before your appointment.</p></div><div class="summary-badge">▤ <span>Personal notes</span></div></div>
+      <div class="summary-layout">
+        <form class="panel visit-form" id="visitForm">
+          <div class="form-heading"><div><span class="section-kicker">YOUR NOTES</span><h2>Tell us what you'd like to discuss</h2><p>Use your own words. You can leave optional fields blank.</p></div><span class="step-label">01 <i>/</i> 02</span></div>
+          <label class="field-label" for="concern">Main concern <span class="required">*</span></label><textarea class="form-textarea" id="concern" rows="4" maxlength="1800" required placeholder="Describe what you have noticed, in your own words..."></textarea>
+          <div class="field-row"><div class="field-group"><label class="field-label" for="duration">When did it start?</label><input id="duration" class="form-input" maxlength="160" placeholder="e.g. About three days ago"/></div><div class="field-group"><label class="field-label" for="impact">How does it affect your day?</label><input id="impact" class="form-input" maxlength="300" placeholder="e.g. Makes it harder to concentrate"/></div></div>
+          <label class="field-label" for="context">Other context <span class="optional">OPTIONAL</span></label><textarea class="form-textarea compact" id="context" rows="3" maxlength="700" placeholder="Anything else you would like your clinician to know (optional)..."></textarea>
+          <label class="field-label" for="questions">Questions for your clinician <span class="optional">OPTIONAL</span></label><textarea class="form-textarea compact" id="questions" rows="3" maxlength="500" placeholder="What would you like to ask during the appointment?"></textarea>
+          <label class="field-label" for="visitLanguage">Draft language</label><select class="form-input" id="visitLanguage"><option value="en">English</option><option value="kn">Kannada</option><option value="hi">Hindi</option></select>
+          <div class="form-privacy"><span>⌑</span><p>Live AI sends the text you submit to Groq to generate the draft. Avoid names, addresses, phone numbers, IDs, or other identifying information.</p></div>
+          <button class="primary-button" type="submit" id="generateSummary">Generate my visit note <span>→</span></button>
+        </form>
+        <div class="panel output-panel"><div class="output-top"><div><span class="section-kicker">YOUR DRAFT</span><h2>Visit preparation note</h2></div><span class="draft-tag">DRAFT</span></div>
+          <div class="output-placeholder" id="summaryPlaceholder"><div class="placeholder-illustration"><span>▤</span><i>✦</i></div><h3>Your note will appear here</h3><p>Fill in your notes and select “Generate my visit note”. Review and edit the result before sharing it with your clinician.</p></div>
+          <div class="summary-result hidden" id="summaryResult"><div id="summaryText" class="markdown-body summary-markdown"></div><div class="output-actions output-actions-wrap"><button class="secondary-button" id="copySummary" type="button">▣ Copy note</button><button class="secondary-button" id="downloadSummary" type="button">↓ Download .txt</button><button class="secondary-button" id="exportPdfSummary" type="button">▤ Export PDF</button><button class="secondary-button" id="saveVisitNote" type="button">＋ Save to my notes</button></div></div>
+          <div class="output-footer"><span>✦</span> AI-generated drafts may contain errors. Always review for accuracy.</div>
+        </div>
+      </div>
+      <footer class="page-footer">A report can be printed or saved as PDF through your browser's print dialog. Your draft is not stored on the server.</footer>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section class="page" id="page-checklist">
+      <div class="page-title-row"><div><div class="eyebrow"><span class="eyebrow-line"></span> APPOINTMENT ORGANISER</div><h1>Smart appointment checklist</h1><p class="hero-subtitle">A simple checklist to help you prepare for a conversation with your healthcare professional.</p></div><div class="summary-badge">✓ <span>Saved on this device</span></div></div>
+      <div class="panel checklist-panel">
+        <div class="checklist-progress-head"><div><span class="section-kicker">YOUR PROGRESS</span><h2 id="checklistProgressText">0 of 10 items completed</h2></div><button class="secondary-button" id="resetChecklist" type="button">Reset checklist</button></div>
+        <div class="progress-track"><div class="progress-fill" id="checklistProgressBar"></div></div>
+        <div id="checklistGroups" class="checklist-groups"></div>
+        <div class="form-privacy"><span>⌑</span><p>Checklist completion is saved only in this browser. It is a preparation aid, not a clinical recommendation.</p></div>
+      </div>
+      <footer class="page-footer">You can skip any item that does not apply to you.</footer>
+    </section>
+
+
+
+    <!-- PRESCRIPTION COMPANION -->
+    <section class="page" id="page-prescription">
+      <div class="page-title-row">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> MEDICINE INFORMATION & REMINDERS</div>
+          <h1>Prescription Companion</h1>
+          <p class="hero-subtitle">Understand medicine-label wording and organise reminders using instructions you have already received from your clinician.</p>
+        </div>
+        <div class="assistant-badge"><span>▣</span> Source-guided AI</div>
+      </div>
+
+      <div class="rx-safety-banner">
+        <span>ⓘ</span>
+        <p><strong>Medication safety:</strong> CarePrep AI does not prescribe, confirm a dose, change treatment or decide what you should do after a missed dose. Always follow the exact prescription and confirm uncertainties with a pharmacist or prescriber.</p>
+      </div>
+
+      <div class="rx-main-grid">
+        <section class="panel rx-card">
+          <div class="form-heading">
+            <div><span class="section-kicker">MEDICINE EXPLAINER</span><h2>Understand a prescribed medicine</h2><p>Search an official label or paste wording from your local package leaflet.</p></div>
+          </div>
+          <form id="prescriptionExplainForm">
+            <label class="field-label" for="medicineNameInput">Medicine name <span class="required">*</span></label>
+            <div class="rx-search-row">
+              <input class="form-input" id="medicineNameInput" maxlength="120" required placeholder="Enter the name printed on the medicine pack" />
+              <button class="secondary-button" id="searchMedicineButton" type="button">Search label</button>
+            </div>
+            <div id="medicineSearchStatus" role="status" aria-live="polite">Search DailyMed for a possible label match, then confirm the exact product details.</div>
+            <div class="rx-source-hint">Search uses DailyMed, a U.S. National Library of Medicine drug-label database. Search results may not match products sold in India or other countries.</div>
+            <div class="rx-label-results hidden" id="medicineLabelResults">
+              <label class="field-label" for="medicineLabelSelect">Choose the exact matching label</label>
+              <select class="form-input" id="medicineLabelSelect"><option value="">Select a label after searching</option></select>
+              <div class="rx-label-meta" id="selectedLabelMeta">Choose the exact strength and manufacturer where shown.</div>
+            </div>
+            <label class="field-label" for="medicineStrengthInput">Strength / formulation <span class="optional">OPTIONAL</span></label>
+            <input class="form-input" id="medicineStrengthInput" maxlength="80" placeholder="e.g. 500 mg tablet — copy from the pack" />
+            <label class="field-label" for="prescribedInstructionInput">Exact wording from your prescription <span class="optional">OPTIONAL</span></label>
+            <textarea class="form-textarea compact" id="prescribedInstructionInput" rows="3" maxlength="700" placeholder="Paste or type the instructions exactly as written. Do not enter personal identifiers."></textarea>
+            <label class="field-label" for="localLeafletText">Text from your local package leaflet <span class="optional">OPTIONAL</span></label>
+            <textarea class="form-textarea compact" id="localLeafletText" rows="4" maxlength="4500" placeholder="Paste the relevant medicine information from the leaflet supplied with your exact product. This helps when a local product is not listed in DailyMed."></textarea>
+            <label class="field-label" for="prescriptionLanguage">Explanation language</label>
+            <select class="form-input" id="prescriptionLanguage"><option value="en">English</option><option value="kn">ಕನ್ನಡ · Kannada</option><option value="hi">हिन्दी · Hindi</option></select>
+            <button class="primary-button" id="explainMedicineButton" type="submit">Explain this medicine information <span>→</span></button>
+          </form>
+          <div class="rx-source-credit">Source: <a href="https://dailymed.nlm.nih.gov/dailymed/" target="_blank" rel="noopener noreferrer">DailyMed · U.S. National Library of Medicine</a>. Confirm the exact local product, active ingredient, strength and manufacturer with a pharmacist.</div>
+        </section>
+
+        <section class="panel rx-card rx-output-card">
+          <div class="output-top"><div><span class="section-kicker">PLAIN-LANGUAGE EXPLANATION</span><h2>Medicine information</h2></div><span class="draft-tag">EDUCATIONAL</span></div>
+          <div class="output-placeholder" id="medicineExplanationPlaceholder"><div class="placeholder-illustration"><span>▣</span><i>✦</i></div><h3>Your explanation will appear here</h3><p>Search for a medicine label, select the exact matching product, and request an explanation. You can also paste text from the leaflet supplied with your local product.</p></div>
+          <div class="summary-result hidden" id="medicineExplanationResult">
+            <div class="markdown-body summary-markdown" id="medicineExplanationText"></div>
+            <div class="rx-source-result" id="medicineExplanationSource"></div>
+            <div class="output-actions"><button class="secondary-button" type="button" id="copyMedicineExplanation">▣ Copy explanation</button><button class="secondary-button" type="button" id="saveMedicineExplanation">＋ Save to my notes</button></div>
+          </div>
+          <div class="output-footer"><span>✦</span> Label explanations can be incomplete or country-specific. They do not confirm that a medicine or dose is appropriate for you.</div>
+        </section>
+      </div>
+
+      <div class="rx-lower-grid">
+        <section class="panel rx-card">
+          <div class="form-heading"><div><span class="section-kicker">MISSED-DOSE LEAFLET EXPLAINER</span><h2>Understand missed-dose wording</h2><p>Paste the exact missed-dose paragraph from the leaflet for your medicine, or use a matching paragraph found in the selected DailyMed label.</p></div></div>
+          <form id="missedDoseForm">
+            <label class="field-label" for="missedDoseMedicineName">Medicine name <span class="optional">OPTIONAL</span></label>
+            <input class="form-input" id="missedDoseMedicineName" maxlength="120" placeholder="Medicine name" />
+            <label class="field-label" for="missedDoseSourceText">Exact missed-dose wording <span class="required">*</span></label>
+            <textarea class="form-textarea" id="missedDoseSourceText" rows="5" maxlength="3500" placeholder="Paste the missed-dose instructions from the exact medicine leaflet or pharmacist's written instructions..."></textarea>
+            <label class="field-label" for="missedDoseLanguage">Explanation language</label>
+            <select class="form-input" id="missedDoseLanguage"><option value="en">English</option><option value="kn">ಕನ್ನಡ · Kannada</option><option value="hi">हिन्दी · Hindi</option></select>
+            <button class="primary-button" id="explainMissedDoseButton" type="submit">Explain these instructions <span>→</span></button>
+          </form>
+          <div class="rx-missed-output hidden" id="missedDoseResult"><div class="markdown-body summary-markdown" id="missedDoseOutput"></div></div>
+          <div class="rx-safety-inline"><strong>Important:</strong> If the correct leaflet wording is unavailable or does not answer your situation, contact a pharmacist or prescriber. Do not take an extra or double dose unless the medicine-specific instructions or your healthcare professional explicitly tell you to.</div>
+        </section>
+
+        <section class="panel rx-card">
+          <div class="form-heading"><div><span class="section-kicker">LOCAL REMINDER ORGANISER</span><h2>Set a medicine reminder</h2><p>Enter only a reminder time that matches the instructions you were given.</p></div></div>
+          <form id="medicationReminderForm">
+            <label class="field-label" for="reminderMedicineName">Medicine label <span class="required">*</span></label>
+            <input class="form-input" id="reminderMedicineName" maxlength="100" required placeholder="e.g. Medicine A" />
+            <label class="field-label" for="reminderTime">Reminder time <span class="required">*</span></label>
+            <input class="form-input" id="reminderTime" type="time" required />
+            <label class="field-label" for="reminderTimingNote">Timing note <span class="optional">OPTIONAL</span></label>
+            <input class="form-input" id="reminderTimingNote" maxlength="80" placeholder="e.g. after breakfast — only if prescribed" />
+            <button class="primary-button" type="submit">Save daily reminder <span>→</span></button>
+          </form>
+          <div class="rx-reminder-controls"><button class="secondary-button" type="button" id="enableMedicationNotifications">Enable browser alerts</button><span id="medicationNotificationStatus">Optional browser notifications</span></div>
+          <div class="rx-reminder-list-heading"><strong>Your reminders</strong><span>Saved on this browser</span></div>
+          <div id="medicationRemindersList" class="rx-reminder-list"><div class="empty-state"><span>◷</span><h3>No reminders yet</h3><p>Add a time copied from your prescription schedule.</p></div></div>
+          <div class="rx-source-hint">Reminders are best-effort browser alerts and work only while this CarePrep AI page remains open. They are not an alarm service and do not confirm that a dose should be taken.</div>
+        </section>
+      </div>
+      <div class="rx-privacy-note"><span>⌑</span><p><strong>Privacy:</strong> Medicine reminders are stored in this browser's localStorage, which is not encrypted. Do not save sensitive details or use this feature as a medical-record system. The medicine-label text and questions submitted for AI explanations are sent to Groq when live AI is enabled. If the page is closed at a reminder time, no alert is sent later.</p></div>
+      <footer class="page-footer">CarePrep AI Prescription Companion is an educational helper. It cannot determine whether you should take, skip, or change a dose. Confirm medicine-specific decisions with your pharmacist or prescriber. This product uses publicly available data from the U.S. National Library of Medicine (NLM), National Institutes of Health, Department of Health and Human Services; NLM is not responsible for this product and does not endorse or recommend it.</footer>
+    </section>
+
+        <!-- LOCAL NOTES -->
+    <section class="page" id="page-notes">
+      <div class="page-title-row"><div><div class="eyebrow"><span class="eyebrow-line"></span> PERSONAL WORKSPACE</div><h1>My private notes</h1><p class="hero-subtitle">Create and organise notes on this browser. Nothing here is uploaded to the CarePrep server.</p></div><div class="summary-badge">▧ <span>Local only</span></div></div>
+      <div class="notes-layout">
+        <form class="panel note-editor" id="noteForm">
+          <div class="form-heading"><div><span class="section-kicker">NOTE EDITOR</span><h2 id="noteEditorTitle">Create a note</h2><p>Use fictional or non-identifying information for this prototype.</p></div></div>
+          <label class="field-label" for="noteTitle">Note title <span class="required">*</span></label><input class="form-input" id="noteTitle" maxlength="100" required placeholder="e.g. Questions for next appointment"/>
+          <label class="field-label" for="noteBody">Your note <span class="required">*</span></label><textarea class="form-textarea" id="noteBody" rows="9" maxlength="6000" required placeholder="Write a reminder or paste a draft you want to keep on this device..."></textarea>
+          <div class="note-editor-actions"><button class="primary-button" id="saveNoteButton" type="submit">Save note <span>→</span></button><button class="secondary-button hidden" id="cancelEditNote" type="button">Cancel edit</button></div>
+          <div class="form-privacy"><span>⌑</span><p>Notes use browser localStorage. They are not encrypted and may be accessible to someone who can use this browser profile. Do not save sensitive medical or identifying details.</p></div>
+        </form>
+        <div class="panel notes-list-panel">
+          <div class="notes-list-heading"><div><span class="section-kicker">YOUR NOTES</span><h2>Saved on this browser <span class="notes-count" id="notesCount">0</span></h2></div><button class="text-danger-button" id="deleteAllNotes" type="button">Delete all</button></div>
+          <input class="form-input notes-search" id="notesSearch" type="search" placeholder="Search your notes..." aria-label="Search notes"/>
+          <div id="notesList" class="notes-list"><div class="empty-state"><span>▧</span><h3>No notes saved yet</h3><p>Save a visit note or create a new note to see it here.</p></div></div>
+        </div>
+      </div>
+      <footer class="page-footer">Local browser storage is convenient for a demo but is not a secure medical-record system. Clear notes before using a shared computer.</footer>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
